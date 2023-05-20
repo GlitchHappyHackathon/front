@@ -90,7 +90,7 @@ export default {
       });
 
       console.log(walletConnection);
-      this.$router.push("/");
+      this.$router.push("/loading");
     },
   },
 };

@@ -136,11 +136,20 @@ export default {
     },
   },
 
-  mounted() {
-    if (this.$route.query.transactionHashes) {
+  // mounted() {
+  //   if (this.$route.query.transactionHashes) {
+  //     const token_id = localStorage.getItem("token_id");
+  //     localStorage.removeItem("token_id");
+  //     this.$router.push("/approve?token_id=" + token_id);
+  //   }
+  // },
+  beforeRouteEnter(to, from, next) {
+    if (to.query.transactionHashes) {
       const token_id = localStorage.getItem("token_id");
-      localStorage.removeItem("token_id");
-      this.$router.push("/approve?token_id=" + token_id);
+      console.log(token_id);
+      next("/approve?token_id=" + token_id);
+    } else {
+      next();
     }
   },
 };

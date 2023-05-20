@@ -69,6 +69,9 @@ export default {
       this.$router.replace("/");
     }
   },
+  unmounted() {
+    localStorage.removeItem("token_id");
+  },
   beforeRouteEnter(to, from, next) {
     if (to.query.token_id) {
       next();
