@@ -1,0 +1,35 @@
+$icon-list: (
+  "quesera",
+  "kalpa",
+  "arrow-down",
+  "person",
+  "arrowLeft",
+  "arrowRight",
+  "arrowRightMax",
+  "arrowLeftMax",
+  "magnifier",
+  "backArrow",
+  "pen"
+);
+
+.icon-svg {
+  display: inline-block;
+  vertical-align: middle;
+  background-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  width: 24px;
+  height: 24px;
+  mask-size: 24px 24px;
+
+  @each $name in $icon-list {
+    &.#{$name} {
+      mask-image: url(/images/svg/#{$name}.svg);
+    }
+  }
+}
+
+.size-16 {
+  width: 16px;
+  height: 16px;
+  mask-size: 16px 16px;
+}
