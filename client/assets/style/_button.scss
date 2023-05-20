@@ -1,0 +1,10 @@
+.btn {
+  height: 48px;
+  border-radius: 12px;
+  line-height: 23px;
+  @apply font-bold
+  text-lg
+  flex 
+justify-center
+  items-center;
+}

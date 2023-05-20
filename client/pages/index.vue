@@ -82,7 +82,9 @@
               </p>
             </div>
           </section>
-          <button class="btn bg-blue w-full mt-8 text-white">Buy Now</button>
+          <button class="btn bg-blue w-full mt-8 text-white" @click="onBuy">
+            Buy Now
+          </button>
         </div>
       </div>
     </Modal>
@@ -91,7 +93,8 @@
 <script>
 import Modal from "@/components/Modal.vue";
 import { GoogleMap, Marker, CustomMarker } from "vue3-google-map";
-
+const { connect, keyStores, WalletConnection, Contract, utils } =
+  window.nearApi;
 export default {
   components: { GoogleMap, Marker, CustomMarker, Modal },
   data() {
@@ -135,28 +138,98 @@ export default {
       this.selectedModalData = product;
       this.showDetailsModal = true;
     },
+    async onBuy() {
+      const myKeyStore = new keyStores.BrowserLocalStorageKeyStore();
+
+      const connectionConfig = {
+        networkId: "testnet",
+        keyStore: myKeyStore, // first create a key store
+        nodeUrl: "https://rpc.testnet.near.org",
+        walletUrl: "https://wallet.testnet.near.org",
+        helperUrl: "https://helper.testnet.near.org",
+        explorerUrl: "https://explorer.testnet.near.org",
+      };
+      const nearConnection = await connect(connectionConfig);
+      console.log(nearConnection);
+
+      // create wallet connection
+      const walletConnection = new WalletConnection(nearConnection, "a");
+      const walletAccountId = walletConnection.getAccountId();
+      console.log(walletAccountId);
+
+      if (!walletConnection.isSignedIn()) {
+        await walletConnection.requestSignIn({
+          methodNames: [],
+          successUrl: window.location.href, // optional redirect URL on success
+          failureUrl: window.location.href, // optional redirect URL on failure
+        });
+        return;
+      }
+
+      const mint = await walletConnection.account().functionCall({
+        contractId: "market.jeongwon0410.testnet",
+        methodName: "offer",
+        args: {
+          token_id: "b-111",
+          nft_contract_id: "nft.jeongwon0410.testnet",
+        },
+        gas: "50000000000000",
+        attachedDeposit: utils.format.parseNearAmount("100"),
+      });
+
+      console.log("min", mint);
+    },
   },
-  // async mounted() {
-  //   const { connect, keyStores, WalletConnection } = window.nearApi;
+  async mounted() {
+    const myKeyStore = new keyStores.BrowserLocalStorageKeyStore();
 
-  //   const myKeyStore = new keyStores.BrowserLocalStorageKeyStore();
+    const connectionConfig = {
+      networkId: "testnet",
+      keyStore: myKeyStore, // first create a key store
+      nodeUrl: "https://rpc.testnet.near.org",
+      walletUrl: "https://wallet.testnet.near.org",
+      helperUrl: "https://helper.testnet.near.org",
+      explorerUrl: "https://explorer.testnet.near.org",
+    };
+    const nearConnection = await connect(connectionConfig);
+    console.log(nearConnection);
 
-  //   const connectionConfig = {
-  //     networkId: "testnet",
-  //     keyStore: myKeyStore, // first create a key store
-  //     nodeUrl: "https://rpc.testnet.near.org",
-  //     walletUrl: "https://wallet.testnet.near.org",
-  //     helperUrl: "https://helper.testnet.near.org",
-  //     explorerUrl: "https://explorer.testnet.near.org",
-  //   };
-  //   const nearConnection = await connect(connectionConfig);
-  //   console.log(nearConnection);
+    // create wallet connection
+    const walletConnection = new WalletConnection(nearConnection, "a");
+    const walletAccountId = walletConnection.getAccountId();
+    const account = await nearConnection.account(walletAccountId);
+    console.log(walletAccountId);
 
-  //   // create wallet connection
-  //   const walletConnection = new WalletConnection(nearConnection, "a");
-  //   const walletAccountId = walletConnection.getAccountId();
-  //   console.log(walletAccountId);
-  // },
+    if (!walletConnection.isSignedIn()) {
+      await walletConnection.requestSignIn({
+        methodNames: [],
+        successUrl: window.location.href, // optional redirect URL on success
+        failureUrl: window.location.href, // optional redirect URL on failure
+      });
+      return;
+    }
+
+    // const contract = new Contract(account, "market.jeongwon0410.testnet", {
+    //   viewMethods: ["get_sales_by_owner_id", "get_supply_sales"],
+    // });
+    // const response1 = await contract.get_sales_by_owner_id({
+    //   account_id: "yapoey_business.testnet",
+    //   from_index: "0",
+    //   limit: 100,
+    // });
+
+    // console.log("get_sales_by_owner_id", response1);
+
+    // const response2 = await contract.get_supply_sales();
+    // console.log("get_supply_sales", response2);
+
+    const contractNFT = new Contract(account, "nft.jeongwon0410.testnet", {
+      viewMethods: ["nft_tokens"],
+    });
+
+    const response3 = await contractNFT.nft_tokens();
+    console.log("nft_tokens", response3);
+  },
 };
 </script>
 <style lang="scss" scoped>
