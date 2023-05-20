@@ -7,4 +7,8 @@
   flex 
 justify-center
   items-center;
+
+  &:disabled {
+    background: #e3e5ff;
+  }
 }

@@ -5,21 +5,35 @@
         <img src="/images/brand_icon.png" width="202" height="157" />
       </div>
       <div class="my-6">
-        <swiper
-          class="swiper"
-          :slidesPerView="2"
-          :centeredSlides="true"
-          :spaceBetween="12"
-          :initialSlide="1"
-        >
-          <swiper-slide v-for="i in 4" :key="i">
+        <swiper class="swiper px-6" :slidesPerView="'2'" :centeredSlides="true">
+          <swiper-slide class="mr-10">
             <div
               class="bg-white rounded-xl flex flex-col justify-center items-center font-bold"
               style="width: 275px; height: 146px"
             >
-              <h1 class="mb-4 text-xl">Best Firt Store</h1>
-              <p class="mb-3 text-lg text-blue">Seoul</p>
+              <h1 class="mb-4 text-xl">Best 1st Store</h1>
+              <p class="mb-3 text-lg text-blue">Incheon</p>
               <p class="text-3xl text-blue">100,000,000P</p>
+            </div>
+          </swiper-slide>
+          <swiper-slide class="mr-10">
+            <div
+              class="bg-white rounded-xl flex flex-col justify-center items-center font-bold"
+              style="width: 275px; height: 146px"
+            >
+              <h1 class="mb-4 text-xl">Best 2nd Store</h1>
+              <p class="mb-3 text-lg text-blue">Seoul</p>
+              <p class="text-3xl text-blue">50,000,000P</p>
+            </div>
+          </swiper-slide>
+          <swiper-slide class="mr-10">
+            <div
+              class="bg-white rounded-xl flex flex-col justify-center items-center font-bold pr-4"
+              style="width: 275px; height: 146px"
+            >
+              <h1 class="mb-4 text-xl">Best 3rd Store</h1>
+              <p class="mb-3 text-lg text-blue">Deagu</p>
+              <p class="text-3xl text-blue">30,000,000P</p>
             </div>
           </swiper-slide>
         </swiper>
@@ -32,16 +46,15 @@
     </section>
     <section
       class="py-6 px-4 bg-white-2 rounded-t-3xl"
-      style="margin-top: -20px; padding-bottom: 90px"
+      style="margin-top: -20px"
     >
       <h1 class="font-bold text-2xl mb-6">User’s Best search</h1>
       <ul>
         <li
-          v-for="i in 3"
           :key="i"
           class="font-bold flex rounded-2xl bg-white items-center p-3 mb-3"
         >
-          <span class="text0-blue">{{ i }}</span>
+          <span class="text0-blue">1</span>
           <img
             class="mx-5"
             src="/images/cosmatic_icon.png"
@@ -50,15 +63,40 @@
           />
           <span>Cosmatic</span>
         </li>
+        <li
+          :key="i"
+          class="font-bold flex rounded-2xl bg-white items-center p-3 mb-3"
+        >
+          <span class="text0-blue">2</span>
+          <img
+            class="mx-5"
+            src="/images/clothes_icon.png"
+            width="40"
+            height="40"
+          />
+          <span>Clothes</span>
+        </li>
+        <li
+          :key="i"
+          class="font-bold flex rounded-2xl bg-white items-center p-3 mb-3"
+        >
+          <span class="text0-blue">3</span>
+          <img
+            class="mx-5"
+            src="/images/ipad_icon.png"
+            width="40"
+            height="40"
+          />
+          <span>Electronics</span>
+        </li>
       </ul>
+      <button
+        class="btn bg-blue w-full text-white"
+        @click="$router.push('/add')"
+      >
+        Add
+      </button>
     </section>
-    <button
-      class="absolute"
-      style="width: 56px; height: 56px; right: 16px; bottom: 24px"
-      @click="$router.push('/add')"
-    >
-      <img src="/images/add.png" />
-    </button>
   </div>
 </template>
 <script>
@@ -80,7 +118,3 @@ export default {
   methods: {},
 };
 </script>
-<style lang="scss" scoped>
-.card {
-}
-</style>

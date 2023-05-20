@@ -25,7 +25,7 @@
             class="flex items-center border-b border-gray"
             style="height: 40px"
           >
-            <input class="w-full" type="text" value="" />
+            <input class="w-full" type="text" v-model="title" />
           </div>
         </div>
 
@@ -35,7 +35,7 @@
             class="flex items-center border-b border-gray"
             style="height: 40px"
           >
-            <input class="w-full" type="text" value="" />
+            <input class="w-full" type="text" v-model="des" />
           </div>
         </div>
 
@@ -45,23 +45,43 @@
             class="flex items-center border-b border-gray"
             style="height: 40px"
           >
-            <input class="w-full" type="text" value="" />
+            <input class="w-full" type="text" v-model="point" />
           </div>
         </div>
 
         <div class="py-6 px-4 bg-white rounded-3xl mb-3">
           <h1 class="font-bold text-2xl mb-6">Benefit</h1>
-          <div>
-            <div>50%</div>
+          <div class="flex justify-between items-center">
+            <div
+              class="rounded-full bg-blue flex items-center justify-center text-white font-bold"
+              style="width: 50px; height: 50px"
+            >
+              50%
+            </div>
+            <p>50% discount</p>
+            <button class="btn bg-blue px-2 text-white">selected</button>
           </div>
         </div>
       </form>
-      <button @click="goMinting">go Minting</button>
+      <button
+        class="mt-6 btn w-full bg-blue text-white"
+        :disabled="title === '' || dec === '' || point === ''"
+        @click="goMinting"
+      >
+        Minting
+      </button>
     </div>
   </div>
 </template>
 <script>
 export default {
+  data() {
+    return {
+      title: "",
+      des: "",
+      point: "",
+    };
+  },
   methods: {
     async goMinting() {
       const { connect, utils, keyStores, WalletConnection } = window.nearApi;
@@ -92,39 +112,36 @@ export default {
         return;
       }
 
-      // const mint = await walletConnection.account().functionCall({
-      //   contractId: "nft.jeongwon0410.testnet",
-      //   methodName: "nft_mint",
-      //   args: {
-      //     token_id: "b-111",
-      //     metadata: {
-      //       title: "aaaa",
-      //       description: "aaaa",
-      //       media:
-      //         "https://bafkreidq4tc2t3diu7duwsyrmyiaaxskvbur24fskn2xqbvfobb3ketwtq.ipfs.nftstorage.link/",
-      //     },
-      //     receiver_id: walletAccountId,
-      //   },
-      //   gas: "50000000000000",
-      //   attachedDeposit: utils.format.parseNearAmount("3"),
-      // });
+      const token_id = `b-${Date.now()}`;
+      localStorage.setItem("token_id", token_id);
 
-      // console.log("min", mint);
-
-      const approve = await walletConnection.account().functionCall({
+      const mint = await walletConnection.account().functionCall({
         contractId: "nft.jeongwon0410.testnet",
-        methodName: "nft_approve",
+        methodName: "nft_mint",
         args: {
-          token_id: "b-111",
-          account_id: "market.jeongwon0410.testnet",
-          msg: "9000000000000000000000000",
+          token_id,
+          metadata: {
+            title: this.title,
+            description: this.des,
+            media:
+              "https://bafkreig7qbp6t7v2g2a5shbea2nxcplxj3p2wkyklkfo6vjdr47cim7hfe.ipfs.nftstorage.link/",
+          },
+          receiver_id: walletAccountId,
         },
         gas: "50000000000000",
-        attachedDeposit: utils.format.parseNearAmount("0.47"),
+        attachedDeposit: utils.format.parseNearAmount(this.point),
       });
 
-      console.log("approve", approve);
+      console.log("min", mint);
     },
+  },
+
+  mounted() {
+    if (this.$route.query.transactionHashes) {
+      const token_id = localStorage.getItem("token_id");
+      localStorage.removeItem("token_id");
+      this.$router.push("/approve?token_id=" + token_id);
+    }
   },
 };
 </script>
